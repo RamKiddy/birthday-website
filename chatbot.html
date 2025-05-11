@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday Kiddy!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display&family=Roboto&family=Raleway:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Playfair Display', serif;
+      background-color: #fff8f0;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 3rem;
+      margin: 30px 0;
+      color: #d6336c;
+      text-align: center;
+    }
+
+    .message {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #ffe0ec;
+      border-radius: 15px;
+      font-family: 'Raleway', sans-serif;
+      font-size: 1.2rem;
+      color: #4a2c2a;
+      line-height: 1.6;
+    }
+
+    .flip-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin: 40px auto;
+    }
+
+    .gift-box {
+      perspective: 1000px;
+    }
+
+    .card {
+      width: 250px;
+      height: 350px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s;
+      border-radius: 20px;
+    }
+
+    .gift-box:hover .card {
+      transform: rotateY(180deg);
+    }
+
+    .card-side {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .card-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-back {
+      background: #fff4f4;
+      transform: rotateY(180deg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      font-style: italic;
+      color: #5a2e2e;
+    }
+
+    .audio-container {
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    .audio-button,
+    .audio-select {
+      background-color: #d6336c;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    select.audio-select {
+      background: white;
+      color: #d6336c;
+      border: 2px solid #d6336c;
+    }
+
+    .audio-player {
+      margin-top: 20px;
+    }
+
+    .balloon {
+      width: 60px;
+      height: 80px;
+      background-color: #ff6f91;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      position: absolute;
+      animation: floatUp 10s infinite ease-in;
+      z-index: 0;
+    }
+
+    .balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      width: 2px;
+      height: 20px;
+      background: #999;
+      transform: translateX(-50%);
+    }
+
+    @keyframes floatUp {
+      0% { bottom: -100px; opacity: 0; }
+      50% { opacity: 1; }
+      100% { bottom: 110%; opacity: 0; }
+    }
+
+    .balloon:nth-child(1) { left: 10%; background-color: #ffb6b9; animation-delay: 0s; }
+    .balloon:nth-child(2) { left: 30%; background-color: #fcd5ce; animation-delay: 2s; }
+    .balloon:nth-child(3) { left: 50%; background-color: #cdb4db; animation-delay: 4s; }
+    .balloon:nth-child(4) { left: 70%; background-color: #b5ead7; animation-delay: 6s; }
+    .balloon:nth-child(5) { left: 90%; background-color: #ffdac1; animation-delay: 8s; }
+
+    canvas {
+      position: fixed;
+      pointer-events: none;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 999;
+    }
+
+    /* Chatbot styles */
+    #chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 300px;
+      height: 400px;
+      background-color: #fff;
+      border: 1px solid #d6336c;
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #chatbot .messages {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+
+    #chatbot input {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #d6336c;
+      margin-top: 10px;
+    }
+
+    #chatbot button {
+      background-color: #d6336c;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="balloon"></div>
+  <div class="balloon"></div>
+  <div class="balloon"></div>
+  <div class="balloon"></div>
+  <div class="balloon"></div>
+
+  <canvas id="confetti"></canvas>
+
+  <h1>Happy Birthday, Kiddy! 🎈</h1>
+
+  <div class="message">
+    <p>
+      Hey Akshaya my kiddy my uyir,<br><br>
+      First of all, thank you for being such an important part of my life.<br>
+      From 6th standard to this new beginning of my life, you’ve always been a strong support, encouraging me to follow the things I love.<br>
+      The conversations we shared during our school days will forever stay in my heart — those were truly unforgettable golden days.<br><br>
+
+      I’m always proud of you, not just as a friend, but as a person — for all the sacrifices you make for your family and the hard work you put in to build a better future for yourself. It's truly inspiring and enriching.<br>
+      Your advice has been my guiding light, helping me move forward even during tough times.<br><br>
+
+      You're the best part of my journey.<br>
+      Please don't forget me in the coming days — I promise to chase my dreams and make you proud one day.<br><br>
+
+      Once again, thank you for all the care, love, and support you've shown me.<br><br>
+      With lots of love and gratitude,<br>
+      <b>SUSA</b>
+    </p>
+  </div>
+
+  <section class="flip-gallery">
+    <div class="gift-box">
+      <div class="card">
+        <div class="card-side card-front">
+          <img src="kd1.png" alt="Gift 1">
+        </div>
+        <div class="card-side card-back">
+          <p>"You are magic and kindness in one soul."</p>
+        </div>
+      </div>
+    </div>
+    <div class="gift-box">
+      <div class="card">
+        <div class="card-side card-front">
+          <img src="kd2.png" alt="Gift 2">
+        </div>
+        <div class="card-side card-back">
+          <p>"Together, we make the best memories."</p>
+        </div>
+      </div>
+    </div>
+    <div class="gift-box">
+      <div class="card">
+        <div class="card-side card-front">
+          <img src="kd3.png" alt="Gift 3">
+        </div>
+        <div class="card-side card-back">
+          <p>"Always by your side, through thick and thin."</p>
+        </div>
+      </div>
+    </div>
+    <div class="gift-box">
+      <div class="card">
+        <div class="card-side card-front">
+          <img src="kd4.png" alt="Gift 4">
+        </div>
+        <div class="card-side card-back">
+          <p>"You are the sunshine on cloudy days."</p>
+        </div>
+      </div>
+    </div>
+    <div class="gift-box">
+      <div class="card">
+        <div class="card-side card-front">
+          <img src="kd5.png" alt="Gift 5">
+        </div>
+        <div class="card-side card-back">
+          <p>"You fill my heart with joy and laughter."</p>
+        </div>
+      </div>
+    </div>
+    <div class="gift-box">
+      <div class="card">
+        <div class="card-side card-front">
+          <img src="kd6.png" alt="Gift 6">
+        </div>
+        <div class="card-side card-back">
+          <p>"Grateful for every moment with you."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="audio-container">
+    <select class="audio-select" onchange="switchAudio(this.value)">
+      <option value="">🎵 Select a song</option>
+      <option value="kaathalae.mp3">Kaathalae Kaathalae</option>
+      <option value="kadhaippoma.mp3">Kadhaippoma</option>
+    </select>
+    <button class="audio-button" onclick="document.getElementById('audioInput').click()">Upload Custom Audio</button>
+    <input type="file" id="audioInput" accept="audio/*" style="display:none" onchange="playAudioUpload()">
+    <div class="audio-player" id="audioPlayer"></div>
+  </div>
+
+  <!-- Chatbot -->
+  <div id="chatbot">
+    <div class="messages">
+      <div class="message bot-message">
+        <p>Hello! Ask me anything.</p>
+      </div>
+    </div>
+    <input type="text" id="chat-input" placeholder="Ask me..." />
+    <button onclick="getResponse()">Send</button>
+  </div>
+
+  <script>
+    // Confetti
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const confetti = [];
+    const colors = ['#ff6f91', '#ffb6b9', '#fcd5ce', '#cdb4db', '#b5ead7', '#ffdac1'];
+
+    for (let i = 0; i < 300; i++) {
+      confetti.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        r: Math.random() * 6 + 4,
+        d: Math.random() * 2 + 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        tilt: Math.random() * 10 - 10,
+        tiltAngleIncremental: Math.random() * 0.07 + 0.05,
+        tiltAngle: 0
+      });
+    }
+
+    function drawConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confetti.forEach(c => {
+        ctx.beginPath();
+        ctx.lineWidth = c.r / 2;
+        ctx.strokeStyle = c.color;
+        ctx.moveTo(c.x + c.tilt + c.r / 4, c.y);
+        ctx.lineTo(c.x + c.tilt, c.y + c.tilt + c.r / 4);
+        ctx.stroke();
+      });
+      update();
+    }
+
+    function update() {
+      confetti.forEach(c => {
+        c.y += c.d;
+        c.tiltAngle += c.tiltAngleIncremental;
+        c.tilt = Math.sin(c.tiltAngle) * 15;
+        if (c.y > canvas.height) {
+          c.y = -10;
+          c.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    (function animateConfetti() {
+      requestAnimationFrame(animateConfetti);
+      drawConfetti();
+    })();
+
+    // Audio Player
+    let audioElement = null;
+
+    function switchAudio(src) {
+      if (!src) return;
+      if (audioElement) audioElement.pause();
+      audioElement = new Audio(src);
+      audioElement.controls = true;
+      document.getElementById('audioPlayer').innerHTML = '';
+      document.getElementById('audioPlayer').appendChild(audioElement);
+      audioElement.play();
+    }
+
+    function playAudioUpload() {
+      const input = document.getElementById('audioInput');
+      const file = input.files[0];
+      if (file) {
+        if (audioElement) audioElement.pause();
+        const audioURL = URL.createObjectURL(file);
+        audioElement = new Audio(audioURL);
+        audioElement.controls = true;
+        const container = document.getElementById('audioPlayer');
+        container.innerHTML = '';
+        container.appendChild(audioElement);
+        audioElement.play();
+      }
+    }
+
+    // Chatbot Response
+    function getResponse() {
+      const userInput = document.getElementById('chat-input').value.toLowerCase();
+      const responseElement = document.createElement('div');
+      responseElement.classList.add('message');
+      const messages = {
+        "who am i for ram": "Love, Friend, Caring person, Bestie, Crush, Heart, Breathe, Thought, (secret one side)",
+        "why he is doing all this": "You're the person who made him a better person, made him smile, supporting him, and still has small affection on him.",
+        "is our bond continues": "Maybe he needs you all the time but god has the plans.",
+        "is ram still loves me": "FOREVER, until his last breathe, your memories are the gift for him he can live through it but he badly needs you to stand with him."
+      };
+      responseElement.textContent = messages[userInput] || "Sorry, I didn't understand that.";
+      document.querySelector('.messages').appendChild(responseElement);
+      document.getElementById('chat-input').value = '';
+    }
+  </script>
+</body>
+</html>
+
